@@ -162,56 +162,27 @@ int t0, int t1, int t2)
 
 	std::map<std::string,std::vector<double>> results;
 
-	// linear scan
-	auto start = std::chrono::high_resolution_clock::now();
-	LinearScan(v0,t0);
-	auto end = std::chrono::high_resolution_clock::now();
-	results[LINEAR_SCAN].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
+	std::vector<std::vector<int>> vecs = {v0,v1,v2};
+	std::vector<int> targs = {t0,t1,t2};
+
+	for(int i=0;i<vecs.size();i++)
+	{
+		auto start = std::chrono::high_resolution_clock::now();
+		LinearScan(vecs[i],targs[i]);
+		auto end = std::chrono::high_resolution_clock::now();
+		results[LINEAR_SCAN].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
+
+		start = std::chrono::high_resolution_clock::now();
+		BinarySearch(vecs[i],targs[i]);
+		end = std::chrono::high_resolution_clock::now();
+		results[BINARY_SEARCH].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
+
+		start = std::chrono::high_resolution_clock::now();
+		InterpolationSearch(vecs[i],targs[i]);
+		end = std::chrono::high_resolution_clock::now();
+		results[INTERPOLATION_SEARCH].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
+	}
 	
-	start = std::chrono::high_resolution_clock::now();
-	LinearScan(v1,t1);
-	end = std::chrono::high_resolution_clock::now();
-	results[LINEAR_SCAN].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
-
-	start = std::chrono::high_resolution_clock::now();
-	LinearScan(v2,t2);
-	end = std::chrono::high_resolution_clock::now();
-	results[LINEAR_SCAN].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
-
-
-	// binary search
-	start = std::chrono::high_resolution_clock::now();
-	BinarySearch(v0,t0);
-	end = std::chrono::high_resolution_clock::now();
-	results[BINARY_SEARCH].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
-
-	start = std::chrono::high_resolution_clock::now();
-	BinarySearch(v1,t1);
-	end = std::chrono::high_resolution_clock::now();
-	results[BINARY_SEARCH].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
-
-	start = std::chrono::high_resolution_clock::now();
-	BinarySearch(v2,t2);
-	end = std::chrono::high_resolution_clock::now();
-	results[BINARY_SEARCH].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
-
-
-	// interpolation search
-	start = std::chrono::high_resolution_clock::now();
-	InterpolationSearch(v0,t0);
-	end = std::chrono::high_resolution_clock::now();
-	results[INTERPOLATION_SEARCH].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
-
-	start = std::chrono::high_resolution_clock::now();
-	InterpolationSearch(v1,t1);
-	end = std::chrono::high_resolution_clock::now();
-	results[INTERPOLATION_SEARCH].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
-
-	start = std::chrono::high_resolution_clock::now();
-	InterpolationSearch(v2,t2);
-	end = std::chrono::high_resolution_clock::now();
-	results[INTERPOLATION_SEARCH].push_back(std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count());
-
 	return results;
 	
 }
